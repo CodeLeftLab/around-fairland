@@ -1,0 +1,74 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Fairland Park</title>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<style>.flex-container {display: -ms-flexbox;    display: -webkit-flex;    display: flex;    -webkit-flex-direction: column;    -ms-flex-direction: column;    flex-direction: column;
+    -webkit-flex-wrap: nowrap;    -ms-flex-wrap: nowrap;    flex-wrap: nowrap;    -webkit-justify-content: flex-start;    -ms-flex-pack: start;    justify-content: flex-start;
+    -webkit-align-content: stretch;    -ms-flex-line-pack: stretch;    align-content: stretch;    -webkit-align-items: center;    -ms-flex-align: center;    align-items: center;    }
+.flex-item:nth-child(1) {    -webkit-order: 0;    -ms-flex-order: 0;    order: 0;    -webkit-flex: 0 1 auto;    -ms-flex: 0 1 auto;    flex: 0 1 auto;    -webkit-align-self: auto;
+    -ms-flex-item-align: auto;    align-self: auto;    }
+.flex-item:nth-child(2) {    -webkit-order: 0;    -ms-flex-order: 0;    order: 0;    -webkit-flex: 0 1 auto;    -ms-flex: 0 1 auto;    flex: 0 1 auto;    -webkit-align-self: auto;
+    -ms-flex-item-align: auto;    align-self: auto;    }
+.flex-item:nth-child(3) {    -webkit-order: 0;    -ms-flex-order: 0;    order: 0;    -webkit-flex: 0 1 auto;    -ms-flex: 0 1 auto;    flex: 0 1 auto;    -webkit-align-self: auto;
+    -ms-flex-item-align: auto;    align-self: auto;    }
+
+#wrapper { width: 80%; margin: 0 auto; } #szGaugeChart1 { width: 45%; float: left; } #szGaugeChart2 { width: 45%; float: right; } </style>
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+<script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1.1','packages':['corechart','gauge']}]}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script>function szVisualise() {var szpagenum = 1;  var public_key = 'KJ36Y39YrVSZ0Rqxvdqv';// 'WGvOMrVnY8sYyJm7E5Lv';    // JSONP request http://phant.io/docs/output/http/
+var jsonData = $.ajax({url: 'https://data.sparkfun.com/output/' + public_key + '.json', data: {page: szpagenum}, dataType: 'jsonp', }).done(function (results) {
+	var szTherms = new google.visualization.DataTable(); szTherms.addColumn('datetime', 'timestamp'); szTherms.addColumn('number', 'temp'); szTherms.addColumn('number', 'pressure');
+	
+    var szLabelGauge1 = google.visualization.arrayToDataTable([	['Label', 'Value'],	['degC', 0] ]); 
+	var szGaugeOpts1 = {width: 750, height: 225,  majorTicks: ['-20','-10','0','10', '20', '30'], minorTicks: 5, animation:{duration: 500,easing: 'inAndOut' }, };
+	var szGaugeOpts2 = {width: 750, height: 225,  majorTicks: ['0', '10', '20', '', '40', '50'],   minorTicks: 3,  animation:{duration: 500,	easing: 'inAndOut'  },  };
+	var temp1 = 0.0;  var temp2 = 0.0; //var sztlab='º'+'C';
+	$.each(results, function (i, row) {
+									if (parseFloat(row.t1) > 0) {temp1 = parseFloat(row.t1)} 
+									if (parseFloat(row.t2) > 0) {temp2 = parseFloat(row.t2)}
+									szTherms.addRow([  (new Date(row.timestamp)),  temp1,  temp2 ]);  });
+
+	
+	var szGaugeDisp1 = google.visualization.arrayToDataTable([['Label', 'Value'],['º'+'C', parseFloat(szTherms.getFormattedValue(1,1))] ]);  	// szChartGauge.draw(szGaugeDisp1, szGaugeOpts1); 
+        var szChartGauge = new google.visualization.Gauge(document.getElementById('szGaugeChart1')); szChartGauge.draw(szLabelGauge1, szGaugeOpts1);
+		var szLabelGauge2 = google.visualization.arrayToDataTable([	['Label', 'Value'],	['mBar', 0] ]); 
+        var szChartGauge = new google.visualization.Gauge(document.getElementById('szGaugeChart2')); szChartGauge.draw(szLabelGauge2, szGaugeOpts2);		
+        // Create temperature chart  
+        var szLineChart = new google.visualization.LineChart($('#szLineChart').get(0));
+		var options1 = { width: 1000,  height: 563,  legend: { position: 'top' },   hAxis: {  title: 'Temperatures'	},   vAxis: { title: 'C' } 	};    szLineChart.draw(szTherms,options1);
+		document.getElementById("szLastUpdate").innerHTML = szTherms.getFormattedValue(1,0);
+	});
+}
+      setInterval(function()	{szpagenum = 1;	    		szVisualise(); document.getElementById("szNumOfPage").innerHTML = szpagenum;},900000); // refresh every 15 minutes
+   	  function szLatestData()	{szpagenum = 1;   	    	szVisualise(); document.getElementById("szNumOfPage").innerHTML = szpagenum;};
+   	  function szEarlier()		{szpagenum = szpagenum+1;	szVisualise(); document.getElementById("szNumOfPage").innerHTML = szpagenum;};
+   	  function szLater()		{szpagenum = szpagenum-1;   	if (szpagenum < 1) szpagenum = 1;   	
+															szVisualise(); document.getElementById("szNumOfPage").innerHTML = szpagenum;};
+google.load('visualization', '1.1', {packages: ['corechart','gauge']  }); // load gauge lib
+google.setOnLoadCallback(szVisualise);</script> </head>
+  <body>
+<div class="flex-container">
+<div class="flex-item"><div id="wrapper"><h2><a href="https://goo.gl/maps/4foth29iZb92" target="_blank">Fairland Park, Haringey, UK</a></h2>
+   <div id="szGaugeChart1" style="padding-right:20px;"></div><div id="szGaugeChart2" style="padding-left:20px;"></div></div></div>
+<div class="flex-item"><div id="szLineChart"><br /></div></div>
+<div class="flex-item">
+    <input type="button" class="btn btn-primary" value="Latest Data" onclick="szLatestData()" />
+    <input type="button" class="btn btn-primary" value="Earlier" onclick="szEarlier()" />
+    <input type="button" class="btn btn-primary" value="Later" onclick="szLater()" /><BR>
+    Automatic update every 15 minutes. Current page #:<span id="szNumOfPage">1</span> Last updated on <span id="szLastUpdate">1</span> 
+	  <div align="center"><a href="img/SolarESPnBMP180.jpg" target="_blank"><img src="img/SolarESPnBMP180-200x172.jpg"></a></div>
+
+</div>
+</div>
+  
+  
+  
+<br />
+  
+
+<!-- jQuery for Bootstrap https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js -->
+
+<!-- Including compiled plugins js/bootstrap.min.js --></body></html>
