@@ -1,74 +1,130 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Fairland Park</title>
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<style>.flex-container {display: -ms-flexbox;    display: -webkit-flex;    display: flex;    -webkit-flex-direction: column;    -ms-flex-direction: column;    flex-direction: column;
-    -webkit-flex-wrap: nowrap;    -ms-flex-wrap: nowrap;    flex-wrap: nowrap;    -webkit-justify-content: flex-start;    -ms-flex-pack: start;    justify-content: flex-start;
-    -webkit-align-content: stretch;    -ms-flex-line-pack: stretch;    align-content: stretch;    -webkit-align-items: center;    -ms-flex-align: center;    align-items: center;    }
-.flex-item:nth-child(1) {    -webkit-order: 0;    -ms-flex-order: 0;    order: 0;    -webkit-flex: 0 1 auto;    -ms-flex: 0 1 auto;    flex: 0 1 auto;    -webkit-align-self: auto;
-    -ms-flex-item-align: auto;    align-self: auto;    }
-.flex-item:nth-child(2) {    -webkit-order: 0;    -ms-flex-order: 0;    order: 0;    -webkit-flex: 0 1 auto;    -ms-flex: 0 1 auto;    flex: 0 1 auto;    -webkit-align-self: auto;
-    -ms-flex-item-align: auto;    align-self: auto;    }
-.flex-item:nth-child(3) {    -webkit-order: 0;    -ms-flex-order: 0;    order: 0;    -webkit-flex: 0 1 auto;    -ms-flex: 0 1 auto;    flex: 0 1 auto;    -webkit-align-self: auto;
-    -ms-flex-item-align: auto;    align-self: auto;    }
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Displays temperature and presssure readings from a solar-powered monitor in Fairland Park, Harringay">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fairland Park, Harringay</title>
+    <meta name="mobile-web-app-capable" content="yes"><link rel="icon" sizes="192x192" href="images/touch/chrome-touch-icon-192x192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Fairland Park, Harringay">
+    <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-precomposed.png">
+    <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#3372DF">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="mdl-templates/material.min.css"><link rel="stylesheet" href="css/styles.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js">
+</script>
+<script>$(document).ready(function() {var offset = new Date().getTimezoneOffset();// http://stackoverflow.com/questions/1091372/getting-the-clients-timezone-in-javascript
+setInterval(function()	{szpagenum = 1;	document.getElementById("szNumOfPage").innerHTML = szpagenum; szMain();  },15*60*60); // refresh every 1 minute
+google.setOnLoadCallback(szMain); } ); 
+///////////////////////////////////////////////////////////////
+function szMain() {var szpagenum = 1;  var JSONPfeedURL='https://data.sparkfun.com/output/KJ36Y39YrVSZ0Rqxvdqv.json'; // http://phant.io/docs/output/http/
+var obj={}; obj[0]=['datetime','timestamp'];obj[1]=['number','temp'];obj[2]=['number','pressure'];
+var jsonPData = $.ajax({url: JSONPfeedURL, data: {page: szpagenum}, dataType: 'jsonp', }) // read the data from an external source
+.done(function (results) {var elct=0;var therm1 = 0.0;  var press2 = 0.0; // draw a chart
+	var szChartOut = new google.visualization.DataTable(); szChartOut.addColumn(obj[0][0], obj[0][1]); szChartOut.addColumn(obj[1][0], obj[1][1]); szChartOut.addColumn(obj[2][0], obj[2][1]);
+	$.each(results, function (i, row) {elct++;therm1 = parseFloat(row.temp)-0.0 .toFixed(1); press2 = parseFloat(row.pressure)-1000 .toFixed(1);
+		var szdate = new Date(row.timestamp); var szTooOld=new Date('2015-07-23 17:08:53');	if (szdate>szTooOld) {} // if (press2 < 1000) {return false;}
+			szChartOut.addRow([ szdate,  therm1,  press2 ]); });
+	var szLineChartOpts = {height:563,backgroundColor: "rgb(235, 255, 235)" , legend: {position: 'bottom'}, //  vAxes: {0: {logScale: false},  1: {logScale: false, maxValue: 1.5}},
+	//legend:{position:'top'}, //  ,
+	title: 'Readings from Fairland Park', subtitle: 'updated every 15 minutes',
+	series: {0:{axis: 'temp'}, 1:{axis: 'pressure'}, scaleType:'allfixed' }, 
+	axes:{
+	y:{ temp: {label: 'Temperature in Celsius'},  pressure: {label: 'milliBars of Pressure above 1000'}  }, 
+	x: { 0: {side: 'top', label: 'showing '+elct+ ' readings'} }   
+	},
+ 
+	}; 
+    var szLineChart = new google.charts.Line($('#szLineChart').get(0));szLineChart.draw(szChartOut, google.charts.Line.convertOptions(szLineChartOpts));
+    // Gauges use the first line of data - the latest  
+	szThermVal=szChartOut.getFormattedValue(0,1);szPressVal=szChartOut.getFormattedValue(0,2);
+	var szGaugeOpts = {width: 150, height: 150, redFrom: 26, redTo: 40,	yellowFrom:-10, yellowTo: 10, greenFrom:18, greenTo:25,minorTicks: 5, max:40, min: -10};
+	szDrawGauge(szGaugeOpts,'szGaugeTherm',"\u00B0"+'C',parseFloat(szThermVal)); 
+	var szGaugeOpts = {width: 150, height: 150, redFrom: 1027, redTo: 1040,	yellowFrom:1013, yellowTo: 1026, greenFrom:1001, greenTo:1012,minorTicks: 5, max:1040, min: 1001};
+	szDrawGauge(szGaugeOpts,'szGaugePress','mBar',parseFloat(szPressVal)+1000);
+	szReadDate=szChartOut.getFormattedValue(0,0);document.getElementById("szLastUpdate").innerHTML = szReadDate;
+	///////////////////////////////////////////////
+	function szDrawGauge(ff_opts,ff_div,ff_labelTop,ff_labelAndVal) {var dataMemory = google.visualization.arrayToDataTable([ ['Label', 'Value'], [ff_labelTop, ff_labelAndVal] ]);
+		var chart = new google.visualization.Gauge(document.getElementById(ff_div)); chart.draw(dataMemory, ff_opts);}
+}); }</script>
 
-#wrapper { width: 80%; margin: 0 auto; } #szGaugeChart1 { width: 45%; float: left; } #szGaugeChart2 { width: 45%; float: right; } </style>
-<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries WARNING: Respond.js doesn't work if you view the page via file:// -->
-<!--[if lt IE 9]>
-	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
-<script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1.1','packages':['corechart','gauge']}]}"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script>function szVisualise() {var szpagenum = 1;  var public_key = 'KJ36Y39YrVSZ0Rqxvdqv';// 'WGvOMrVnY8sYyJm7E5Lv';    // JSONP request http://phant.io/docs/output/http/
-var jsonData = $.ajax({url: 'https://data.sparkfun.com/output/' + public_key + '.json', data: {page: szpagenum}, dataType: 'jsonp', }).done(function (results) {
-	var szTherms = new google.visualization.DataTable(); szTherms.addColumn('datetime', 'timestamp'); szTherms.addColumn('number', 'temp'); szTherms.addColumn('number', 'pressure');
 	
-    var szLabelGauge1 = google.visualization.arrayToDataTable([	['Label', 'Value'],	['degC', 0] ]); 
-	var szGaugeOpts1 = {width: 750, height: 225,  majorTicks: ['-20','-10','0','10', '20', '30'], minorTicks: 5, animation:{duration: 500,easing: 'inAndOut' }, };
-	var szGaugeOpts2 = {width: 750, height: 225,  majorTicks: ['0', '10', '20', '', '40', '50'],   minorTicks: 3,  animation:{duration: 500,	easing: 'inAndOut'  },  };
-	var temp1 = 0.0;  var temp2 = 0.0; //var sztlab='º'+'C';
-	$.each(results, function (i, row) {
-									if (parseFloat(row.t1) > 0) {temp1 = parseFloat(row.t1)} 
-									if (parseFloat(row.t2) > 0) {temp2 = parseFloat(row.t2)}
-									szTherms.addRow([  (new Date(row.timestamp)),  temp1,  temp2 ]);  });
-
-	
-	var szGaugeDisp1 = google.visualization.arrayToDataTable([['Label', 'Value'],['º'+'C', parseFloat(szTherms.getFormattedValue(1,1))] ]);  	// szChartGauge.draw(szGaugeDisp1, szGaugeOpts1); 
-        var szChartGauge = new google.visualization.Gauge(document.getElementById('szGaugeChart1')); szChartGauge.draw(szLabelGauge1, szGaugeOpts1);
-		var szLabelGauge2 = google.visualization.arrayToDataTable([	['Label', 'Value'],	['mBar', 0] ]); 
-        var szChartGauge = new google.visualization.Gauge(document.getElementById('szGaugeChart2')); szChartGauge.draw(szLabelGauge2, szGaugeOpts2);		
-        // Create temperature chart  
-        var szLineChart = new google.visualization.LineChart($('#szLineChart').get(0));
-		var options1 = { width: 1000,  height: 563,  legend: { position: 'top' },   hAxis: {  title: 'Temperatures'	},   vAxis: { title: 'C' } 	};    szLineChart.draw(szTherms,options1);
-		document.getElementById("szLastUpdate").innerHTML = szTherms.getFormattedValue(1,0);
-	});
-}
-      setInterval(function()	{szpagenum = 1;	    		szVisualise(); document.getElementById("szNumOfPage").innerHTML = szpagenum;},900000); // refresh every 15 minutes
-   	  function szLatestData()	{szpagenum = 1;   	    	szVisualise(); document.getElementById("szNumOfPage").innerHTML = szpagenum;};
-   	  function szEarlier()		{szpagenum = szpagenum+1;	szVisualise(); document.getElementById("szNumOfPage").innerHTML = szpagenum;};
-   	  function szLater()		{szpagenum = szpagenum-1;   	if (szpagenum < 1) szpagenum = 1;   	
-															szVisualise(); document.getElementById("szNumOfPage").innerHTML = szpagenum;};
-google.load('visualization', '1.1', {packages: ['corechart','gauge']  }); // load gauge lib
-google.setOnLoadCallback(szVisualise);</script> </head>
+</head>
   <body>
-<div class="flex-container">
-<div class="flex-item"><div id="wrapper"><h2><a href="https://goo.gl/maps/4foth29iZb92" target="_blank">Fairland Park, Haringey, UK</a></h2>
-   <div id="szGaugeChart1" style="padding-right:20px;"></div><div id="szGaugeChart2" style="padding-left:20px;"></div></div></div>
-<div class="flex-item"><div id="szLineChart"><br /></div></div>
-<div class="flex-item">
-    <input type="button" class="btn btn-primary" value="Latest Data" onclick="szLatestData()" />
-    <input type="button" class="btn btn-primary" value="Earlier" onclick="szEarlier()" />
-    <input type="button" class="btn btn-primary" value="Later" onclick="szLater()" /><BR>
-    Automatic update every 15 minutes. Current page #:<span id="szNumOfPage">1</span> Last updated on <span id="szLastUpdate">1</span> 
-	  <div align="center"><a href="img/SolarESPnBMP180.jpg" target="_blank"><img src="img/SolarESPnBMP180-200x172.jpg"></a></div>
-
-</div>
-</div>
-  
-  
-  
-<br />
-  
-
-<!-- jQuery for Bootstrap https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js -->
-
-<!-- Including compiled plugins js/bootstrap.min.js --></body></html>
+    <div class="sz22-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+      <header class="sz22-header mdl-layout__header mdl-color--white mdl-color--grey-100 mdl-color-text--grey-600">
+        <div class="mdl-layout__header-row"><span class="mdl-layout-title">Home</span></div>
+      </header>
+      <div class="sz22-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
+        <header class="sz22-drawer-header">
+          <img src="images/SolarESPnBMP180-200x172.jpg" class="sz22-avatar">
+        </header>
+        <nav class="sz22-navigation mdl-navigation mdl-color--blue-grey-800">
+          <div class="mdl-layout-spacer"></div>
+          <a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">help_outline</i><span class="visuallyhidden">Help</span></a>
+        </nav>
+      </div>
+      <main class="mdl-layout__content mdl-color--grey-100">
+        <div class="mdl-grid sz22-content">
+          <div class="sz22-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
+				<div id="szGaugeTherm" style="padding-right:20px;"></div><div id="szGaugePress" style="padding-left:20px;"></div>
+          </div>
+          <div class="sz22-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--8-col"><div id="szLineChart"></div></div>
+          <div class="sz22-cards mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet mdl-grid mdl-grid--no-spacing">
+            <div class="sz22-updates mdl-card mdl-shadow--2dp mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--12-col-desktop">
+              <div class="mdl-card__title mdl-card--expand mdl-color--teal-300">
+                <h2 class="mdl-card__title-text">Location</h2>
+              </div>
+              <div class="mdl-card__supporting-text mdl-color-text--grey-600"><a href="https://goo.gl/maps/4foth29iZb92" target="_blank">
+                Fairland Park, Harringay, London, UK</a>
+              </div>
+              <div class="mdl-card__actions mdl-card--border">
+                <a href="#" class="mdl-button mdl-js-button mdl-js-ripple-effect">Page #:<span id="szNumOfPage">1</span> updated: <span id="szLastUpdate">1</span></a>
+              </div>
+            </div>
+            <div class="sz22-separator mdl-cell--1-col"></div>
+            <div class="sz22-options mdl-card mdl-color--deep-purple-500 mdl-shadow--2dp mdl-cell mdl-cell--4-col mdl-cell--3-col-tablet mdl-cell--12-col-desktop">
+              <div class="mdl-card__supporting-text mdl-color-text--blue-grey-50">
+                <h3>Equipment</h3>
+                <ul>
+                  <li>
+                    <label for="chkbox1" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
+                      <input type="checkbox" id="chkbox1" class="mdl-checkbox__input" />
+                      <span class="mdl-checkbox__label">Arduino Project</span>
+                    </label>
+                  </li>
+                  <li>
+                    <label for="chkbox2" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
+                      <input type="checkbox" id="chkbox2" class="mdl-checkbox__input" />
+                      <span class="mdl-checkbox__label">ESP8266 microcontroller</span>
+                    </label>
+                  </li>
+                  <li>
+                    <label for="chkbox3" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
+                      <input type="checkbox" id="chkbox3" class="mdl-checkbox__input" />
+                      <span class="mdl-checkbox__label">BMP180 temperature/presure sensor</span>
+                    </label>
+                  </li>
+                  <li>
+                    <label for="chkbox4" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
+                      <input type="checkbox" id="chkbox4" class="mdl-checkbox__input" />
+                      <span class="mdl-checkbox__label">Solar powered WiFi</span>
+                    </label>
+                  </li>
+                </ul>
+              </div>
+              <div class="mdl-card__actions mdl-card--border">
+                <a href="#" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--blue-grey-50">View different sensors</a>
+                <div class="mdl-layout-spacer"></div>
+                <i class="material-icons">location_on</i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+      <a href="https://github.com/google/material-design-lite/blob/master/templates/dashboard/" target="_blank" id="view-source" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--accent mdl-color-text--accent-contrast">View Source</a>
+    <script src="mdl-templates/material.min.js"></script>	<script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1.1','packages':['line','gauge']}]}"></script>
+  </body>
+</html>

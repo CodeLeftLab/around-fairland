@@ -1,0 +1,133 @@
+html, body {  font-family: 'Roboto', 'Helvetica', sans-serif;}
+.sz22-avatar {  width: 48px;  height: 48px;  border-radius: 24px;}
+.sz22-layout .sz22-header .szM-textfield {  padding-top: 27px;}
+.sz22-layout .szM-layout__header .szM-layout__drawer-button {  color: rgba(0, 0, 0, 0.54);}
+.szM-layout__drawer .avatar {  margin-bottom: 16px;}
+.sz22-drawer {  border: none;}
+/* iOS Safari specific workaround */
+.sz22-drawer .szM-menu__container {  z-index: -1;}
+.sz22-drawer .sz22-navigation {  z-index: -2;}
+/* END iOS Safari specific workaround */
+.sz22-drawer .szM-menu .szM-menu__item {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.sz22-drawer-header {
+  box-sizing: border-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  padding: 16px;
+  height: 151px;
+}
+.sz22-avatar-dropdown {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 100%;
+}
+
+.sz22-navigation {
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+}
+.sz22-layout .sz22-navigation .szM-navigation__link {
+  display: -webkit-box !important;
+  display: -webkit-flex !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  color: rgba(255, 255, 255, 0.56);
+  font-weight: 500;
+}
+.sz22-layout .sz22-navigation .szM-navigation__link:hover {  background-color: #00BCD4;  color: #37474F;}
+.sz22-navigation .szM-navigation__link .material-icons {  font-size: 24px;  color: rgba(255, 255, 255, 0.56);  margin-right: 32px;}
+.sz22-content {  max-width: 1080px;}
+.sz22-charts {  -webkit-box-align: center;  -webkit-align-items: center;      -ms-flex-align: center;          align-items: center;}
+.sz22-chart:nth-child(1) {  color: #ACEC00;}
+.sz22-chart:nth-child(2) {  color: #00BBD6;}
+.sz22-chart:nth-child(3) {  color: #BA65C9;}
+.sz22-chart:nth-child(4) {  color: #EF3C79;}
+.sz22-graphs {
+  padding: 16px 32px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: stretch;
+  -webkit-align-items: stretch;
+      -ms-flex-align: stretch;
+          align-items: stretch;
+}
+/* TODO: Find a proper solution to have the graphs not float around outside their container in IE10/11. Using a browserhacks.com solution for now. */
+_:-ms-input-placeholder, :root .sz22-graphs {  min-height: 664px;}
+_:-ms-input-placeholder, :root .sz22-graph {  max-height: 300px;}
+/* TODO end */
+.sz22-graph:nth-child(1) {  color: #00b9d8;}
+.sz22-graph:nth-child(2) {  color: #d9006e;}
+
+.sz22-cards {
+  -webkit-box-align: start;
+  -webkit-align-items: flex-start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  -webkit-align-content: flex-start;
+      -ms-flex-line-pack: start;
+          align-content: flex-start;
+}
+.sz22-cards .sz22-separator {  height: 32px;}
+.sz22-cards .szM-card__title.szM-card__title {  color: white;  font-size: 24px;  font-weight: 400;}
+.sz22-cards ul {  padding: 0;}
+.sz22-cards h3 {  font-size: 1em;}
+.sz22-updates .szM-card__title {  min-height: 200px;  background-image: url('images/dog.png');  background-position: 90% 100%;  background-repeat: no-repeat;}
+.sz22-cards .szM-card__actions a {  color: #00BCD4;  text-decoration: none;}
+
+.sz22-options h3 {  margin: 0;}
+.sz22-options .szM-checkbox__box-outline {  border-color: rgba(255, 255, 255, 0.89);}
+.sz22-options ul {  margin: 0;  list-style-type: none;}
+.sz22-options li {  margin: 4px 0;}
+.sz22-options .material-icons {  color: rgba(255, 255, 255, 0.89);}
+.sz22-options .szM-card__actions {  height: 64px;  display: -webkit-box;  display: -webkit-flex;  display: -ms-flexbox;  display: flex;  box-sizing: border-box;  -webkit-box-align: center;
+  -webkit-align-items: center;      -ms-flex-align: center;          align-items: center;}
