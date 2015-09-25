@@ -1,15 +1,17 @@
 html, body {  font-family: 'Roboto', 'Helvetica', sans-serif;}
-.sz22_avatar {  width: 48px;  height: 48px;  border-radius: 24px;}
-.sz22_layout .sz22_header .sz22_textfield {  padding-top: 27px;}
-.sz22_layout .sz22_layout__header .sz22_layout__drawer-button .sz22_layout-transparent .mdl-layout__header .mdl-layout__drawer-button, {  color: rgba(0, 0, 0, 0.54);}
-.sz22_layout-transparent {background: url('../assets/demos/transparent.jpg') center / cover;}
-.sz22_layout__drawer .avatar {  margin-bottom: 16px;}
-.sz22_drawer {  border: none;}
+.mdl-cell--1-col {
+  width: 100%; margin: 0;
+}
+.sz22-avatar {  width: 48px;  height: 48px;  border-radius: 24px;}
+.sz22-layout .sz22-header .szM-textfield {  padding-top: 27px;}
+.sz22-layout .szM-layout__header .szM-layout__drawer-button {  color: rgba(0, 0, 0, 0.54);}
+.szM-layout__drawer .avatar {  margin-bottom: 16px;}
+.sz22-drawer {  border: none;}
 /* iOS Safari specific workaround */
-.sz22_drawer .sz22_menu__container {  z-index: -1;}
-.sz22_drawer .sz22_navigation {  z-index: -2;}
+.sz22-drawer .szM-menu__container {  z-index: -1; margin 0;}
+.sz22-drawer .sz22-navigation {  z-index: -2;}
 /* END iOS Safari specific workaround */
-.sz22_drawer .sz22_menu .sz22_menu__item {
+.sz22-drawer .szM-menu .szM-menu__item {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -19,7 +21,7 @@ html, body {  font-family: 'Roboto', 'Helvetica', sans-serif;}
       -ms-flex-align: center;
           align-items: center;
 }
-.sz22_drawer-header {
+.sz22-drawer-header {
   box-sizing: border-box;
   display: -webkit-box;
   display: -webkit-flex;
@@ -37,7 +39,7 @@ html, body {  font-family: 'Roboto', 'Helvetica', sans-serif;}
   padding: 16px;
   height: 151px;
 }
-.sz22_avatar-dropdown {
+.sz22-avatar-dropdown {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -55,13 +57,13 @@ html, body {  font-family: 'Roboto', 'Helvetica', sans-serif;}
   width: 100%;
 }
 
-.sz22_navigation {
+.sz22-navigation {
   -webkit-box-flex: 1;
   -webkit-flex-grow: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
 }
-.sz22_layout .sz22_navigation .sz22_navigation__link {
+.sz22-layout .sz22-navigation .szM-navigation__link {
   display: -webkit-box !important;
   display: -webkit-flex !important;
   display: -ms-flexbox !important;
@@ -78,15 +80,15 @@ html, body {  font-family: 'Roboto', 'Helvetica', sans-serif;}
   color: rgba(255, 255, 255, 0.56);
   font-weight: 500;
 }
-.sz22_layout .sz22_navigation .sz22_navigation__link:hover {  background-color: #00BCD4;  color: #37474F;}
-.sz22_navigation .sz22_navigation__link .material-icons {  font-size: 24px;  color: rgba(255, 255, 255, 0.56);  margin-right: 32px;}
-.sz22_content {  max-width: 1080px;}
-.sz22_charts {  -webkit-box-align: center;  -webkit-align-items: center;      -ms-flex-align: center;          align-items: center;}
-.sz22_chart:nth-child(1) {  color: #ACEC00;}
-.sz22_chart:nth-child(2) {  color: #00BBD6;}
-.sz22_chart:nth-child(3) {  color: #BA65C9;}
-.sz22_chart:nth-child(4) {  color: #EF3C79;}
-.sz22_graphs {
+.sz22-layout .sz22-navigation .szM-navigation__link:hover {  background-color: #00BCD4;  color: #37474F;}
+.sz22-navigation .szM-navigation__link .material-icons {  font-size: 24px;  color: rgba(255, 255, 255, 0.56);  margin-right: 32px;}
+.sz22-content {  max-width: 1080px; margin 0;}
+.sz22-charts {  -webkit-box-align: center;  -webkit-align-items: center;      -ms-flex-align: center;          align-items: center;}
+.sz22-chart:nth-child(1) {  color: #ACEC00;}
+.sz22-chart:nth-child(2) {  color: #00BBD6;}
+.sz22-chart:nth-child(3) {  color: #BA65C9;}
+.sz22-chart:nth-child(4) {  color: #EF3C79;}
+.sz22-graphs {
   padding: 16px 32px;
   display: -webkit-box;
   display: -webkit-flex;
@@ -103,13 +105,13 @@ html, body {  font-family: 'Roboto', 'Helvetica', sans-serif;}
           align-items: stretch;
 }
 /* TODO: Find a proper solution to have the graphs not float around outside their container in IE10/11. Using a browserhacks.com solution for now. */
-_:-ms-input-placeholder, :root .sz22_graphs {  min-height: 664px;}
-_:-ms-input-placeholder, :root .sz22_graph {  max-height: 300px;}
+_:-ms-input-placeholder, :root .sz22-graphs {  min-height: 664px;}
+_:-ms-input-placeholder, :root .sz22-graph {  max-height: 300px;}
 /* TODO end */
-.sz22_graph:nth-child(1) {  color: #00b9d8;}
-.sz22_graph:nth-child(2) {  color: #d9006e;}
+.sz22-graph:nth-child(1) {  color: #00b9d8;}
+.sz22-graph:nth-child(2) {  color: #d9006e;}
 
-.sz22_cards {
+.sz22-cards {
   -webkit-box-align: start;
   -webkit-align-items: flex-start;
       -ms-flex-align: start;
@@ -118,17 +120,17 @@ _:-ms-input-placeholder, :root .sz22_graph {  max-height: 300px;}
       -ms-flex-line-pack: start;
           align-content: flex-start;
 }
-.sz22_cards .sz22_separator {  height: 32px;}
-.sz22_cards .sz22_card__title.sz22_card__title {  color: white;  font-size: 24px;  font-weight: 400;}
-.sz22_cards ul {  padding: 0;}
-.sz22_cards h3 {  font-size: 1em;}
-.sz22_updates .sz22_card__title {  min-height: 200px;  background-image: url('images/dog.png');  background-position: 90% 100%;  background-repeat: no-repeat;}
-.sz22_cards .sz22_card__actions a {  color: #00BCD4;  text-decoration: none;}
+.sz22-cards .sz22-separator {  height: 32px;}
+.sz22-cards .szM-card__title.szM-card__title {  color: white;  font-size: 24px;  font-weight: 400;}
+.sz22-cards ul {  padding: 0;}
+.sz22-cards h3 {  font-size: 1em;}
+.sz22-updates .szM-card__title {  min-height: 200px;  background-image: url('images/dog.png');  background-position: 90% 100%;  background-repeat: no-repeat;}
+.sz22-cards .szM-card__actions a {  color: #00BCD4;  text-decoration: none;}
 
-.sz22_options h3 {  margin: 0;}
-.sz22_options .sz22_checkbox__box-outline {  border-color: rgba(255, 255, 255, 0.89);}
-.sz22_options ul {  margin: 0;  list-style-type: none;}
-.sz22_options li {  margin: 4px 0;}
-.sz22_options .material-icons {  color: rgba(255, 255, 255, 0.89);}
-.sz22_options .sz22_card__actions {  height: 64px;  display: -webkit-box;  display: -webkit-flex;  display: -ms-flexbox;  display: flex;  box-sizing: border-box;  -webkit-box-align: center;
+.sz22-options h3 {  margin: 0;}
+.sz22-options .szM-checkbox__box-outline {  border-color: rgba(255, 255, 255, 0.89);}
+.sz22-options ul {  margin: 0;  list-style-type: none;}
+.sz22-options li {  margin: 4px 0;}
+.sz22-options .material-icons {  color: rgba(255, 255, 255, 0.89);}
+.sz22-options .szM-card__actions {  height: 64px;  display: -webkit-box;  display: -webkit-flex;  display: -ms-flexbox;  display: flex;  box-sizing: border-box;  -webkit-box-align: center;
   -webkit-align-items: center;      -ms-flex-align: center;          align-items: center;}
