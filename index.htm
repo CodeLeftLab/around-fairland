@@ -12,69 +12,67 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="css/material.min.css"><link rel="stylesheet" href="css/styles.css">
-     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js">
 </script>
-<script>"use strict";$(document).ready(function() {var offset = new Date().getTimezoneOffset();// http://stackoverflow.com/questions/1091372/getting-the-clients-timezone-in-javascript
-setInterval(function(){var szpagenum=1; document.getElementById("szNumOfPage").innerHTML=szpagenum; szMain();},15*60*60); // refresh every 1 minute
-google.setOnLoadCallback(szMain);});
+<script>$(document).ready(function() {var offset = new Date().getTimezoneOffset();// http://stackoverflow.com/questions/1091372/getting-the-clients-timezone-in-javascript
+setInterval(function()	{szpagenum = 1;	document.getElementById("szNumOfPage").innerHTML = szpagenum; szMain();  },15*60*60); // refresh every 1 minute
+google.setOnLoadCallback(szMain); } ); 
 ///////////////////////////////////////////////////////////////
-function szMain() {var szpagenum = 1; var JSONPfeedURL='https://data.sparkfun.com/output/KJ36Y39YrVSZ0Rqxvdqv.json';// http://phant.io/docs/output/http/
+function szMain() {var szpagenum = 1;  var JSONPfeedURL='https://data.sparkfun.com/output/KJ36Y39YrVSZ0Rqxvdqv.json'; // http://phant.io/docs/output/http/
 var obj={}; obj[0]=['datetime','timestamp'];obj[1]=['number','temp'];obj[2]=['number','pressure'];
-var jsonPData = $.ajax({url: JSONPfeedURL, data: {page: szpagenum}, dataType: 'jsonp'})// read the data from an external source
+var jsonPData = $.ajax({url: JSONPfeedURL, data: {page: szpagenum}, dataType: 'jsonp', }) // read the data from an external source
 .done(function (results) {var elct=0;var therm1 = 0.0;  var press2 = 0.0; // draw a chart
-     var szChartOut = new google.visualization.DataTable(); szChartOut.addColumn(obj[0][0], obj[0][1]); szChartOut.addColumn(obj[1][0], obj[1][1]); szChartOut.addColumn(obj[2][0], obj[2][1]);
-     $.each(results, function (i, row) {elct++;therm1 = parseFloat(row.temp).toFixed(1)-0.0; press2 = parseFloat(row.pressure).toFixed(1)-1000;
-          var szdate = new Date(row.timestamp); // var szTooOld=new Date('2015-07-23 17:08:53');     if (szdate>szTooOld) {} // if (press2 < 1000) {return false;}
-               szChartOut.addRow([ szdate,  therm1,  press2 ]); });
-     var szLineChartOpts = {height:563,backgroundColor: "rgb(235, 255, 235)" , legend: {position: 'bottom'}, //  vAxes: {0: {logScale: false},  1: {logScale: false, maxValue: 1.5}},
-     //legend:{position:'top'}, //  ,
-     title: 'Readings from Fairland Park', subtitle: 'updated every 15 minutes',
-     series: {0:{axis: 'temp'}, 1:{axis: 'pressure'}, scaleType:'allfixed'},
-     axes:   {y:{ temp: {label: 'Temperature in Celsius'},  pressure: {label: 'milliBars of Pressure above 1000'}},
-              x:{ 0: {side: 'top', label: 'showing '+elct+ ' readings'}}}};
+	var szChartOut = new google.visualization.DataTable(); szChartOut.addColumn(obj[0][0], obj[0][1]); szChartOut.addColumn(obj[1][0], obj[1][1]); szChartOut.addColumn(obj[2][0], obj[2][1]);
+	$.each(results, function (i, row) {elct++;therm1 = parseFloat(row.temp)-0.0 .toFixed(1); press2 = parseFloat(row.pressure)-1000 .toFixed(1);
+		var szdate = new Date(row.timestamp); var szTooOld=new Date('2015-07-23 17:08:53');	if (szdate>szTooOld) {} // if (press2 < 1000) {return false;}
+			szChartOut.addRow([ szdate,  therm1,  press2 ]); });
+	var szLineChartOpts = {height:563,backgroundColor: "rgb(235, 255, 235)" , legend: {position: 'bottom'}, //  vAxes: {0: {logScale: false},  1: {logScale: false, maxValue: 1.5}},
+	//legend:{position:'top'}, //  ,
+	title: 'Readings from Fairland Park', subtitle: 'updated every 15 minutes',
+	series: {0:{axis: 'temp'}, 1:{axis: 'pressure'}, scaleType:'allfixed' }, 
+	axes:{
+	y:{ temp: {label: 'Temperature in Celsius'},  pressure: {label: 'milliBars of Pressure above 1000'}  }, 
+	x: { 0: {side: 'top', label: 'showing '+elct+ ' readings'} }   
+	},
+ 
+	}; 
     var szLineChart = new google.charts.Line($('#szLineChart').get(0));szLineChart.draw(szChartOut, google.charts.Line.convertOptions(szLineChartOpts));
-    // Gauges use the first line of data - the latest
-     var szThermVal=szChartOut.getFormattedValue(0,1);var szPressVal=szChartOut.getFormattedValue(0,2);
-     var szGaugeOpts = {width: 150, height: 150, redFrom: 26, redTo: 40,     yellowFrom:-10, yellowTo: 10, greenFrom:18, greenTo:25,minorTicks: 5, max:40, min: -10};
-     szDrawGauge(szGaugeOpts,'szGaugeTherm',"\u00B0"+'C',parseFloat(szThermVal));
-     var szGaugeOpts = {width: 150, height: 150, redFrom: 1027, redTo: 1040,     yellowFrom:1013, yellowTo: 1026, greenFrom:1001, greenTo:1012,minorTicks: 5, max:1040, min: 1001};
-     szDrawGauge(szGaugeOpts,'szGaugePress','mBar',parseFloat(szPressVal)+1000);
-     var szReadDate=szChartOut.getFormattedValue(0,0);document.getElementById("szLastUpdate").innerHTML = szReadDate;
-     ///////////////////////////////////////////////
-     function szDrawGauge(ff_opts,ff_div,ff_labelTop,ff_labelAndVal) {var dataMemory = google.visualization.arrayToDataTable([ ['Label', 'Value'], [ff_labelTop, ff_labelAndVal] ]);
-          var chart = new google.visualization.Gauge(document.getElementById(ff_div)); chart.draw(dataMemory, ff_opts);}
-}); }</script></head>
+    // Gauges use the first line of data - the latest  
+	szThermVal=szChartOut.getFormattedValue(0,1);szPressVal=szChartOut.getFormattedValue(0,2);
+	var szGaugeOpts = {width: 150, height: 150, redFrom: 26, redTo: 40,	yellowFrom:-10, yellowTo: 10, greenFrom:18, greenTo:25,minorTicks: 5, max:40, min: -10};
+	szDrawGauge(szGaugeOpts,'szGaugeTherm',"\u00B0"+'C',parseFloat(szThermVal)); 
+	var szGaugeOpts = {width: 150, height: 150, redFrom: 1027, redTo: 1040,	yellowFrom:1013, yellowTo: 1026, greenFrom:1001, greenTo:1012,minorTicks: 5, max:1040, min: 1001};
+	szDrawGauge(szGaugeOpts,'szGaugePress','mBar',parseFloat(szPressVal)+1000);
+	szReadDate=szChartOut.getFormattedValue(0,0);document.getElementById("szLastUpdate").innerHTML = szReadDate;
+	///////////////////////////////////////////////
+	function szDrawGauge(ff_opts,ff_div,ff_labelTop,ff_labelAndVal) {var dataMemory = google.visualization.arrayToDataTable([ ['Label', 'Value'], [ff_labelTop, ff_labelAndVal] ]);
+		var chart = new google.visualization.Gauge(document.getElementById(ff_div)); chart.draw(dataMemory, ff_opts);}
+}); }</script>
+
+	
+</head>
   <body>
-    <div class="sz22_layout mdl-layout sz22_layout-transparent mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
-      <header class="sz22_header mdl-layout__header mdl-layout__header--transparent mdl-color--white mdl-color--grey-100 mdl-color-text--grey-600">
-        <div class="mdl-layout__header-row">
-			<span class="mdl-layout-title">Home</span><!-- Add spacer, to align navigation to the right --><div class="mdl-layout-spacer"></div>
-			<nav class="mdl-navigation">
-				<a class="mdl-navigation__link" href="">Link</a>
-				<a class="mdl-navigation__link" href="">Link</a>
-				<a class="mdl-navigation__link" href="">Link</a>
-				<a class="mdl-navigation__link" href="">Link</a>
-			</nav>
-		</div>
+    <div class="sz22-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+      <header class="sz22-header mdl-layout__header mdl-color--white mdl-color--grey-100 mdl-color-text--grey-600">
+        <div class="mdl-layout__header-row"><span class="mdl-layout-title">Home</span></div>
       </header>
-      <div class="sz22_drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
-		<div class="mdl-layout__header-row">
-        <header class="sz22_drawer-header">
-          <img src="images/SolarESPnBMP180-200x172.jpg" class="sz22_avatar">
+      <div class="sz22-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
+        <header class="sz22-drawer-header">
+          <img src="images/SolarESPnBMP180-200x172.jpg" class="sz22-avatar">
         </header>
-        <nav class="sz22_navigation mdl-navigation mdl-color--blue-grey-800">
+        <nav class="sz22-navigation mdl-navigation mdl-color--blue-grey-800">
           <div class="mdl-layout-spacer"></div>
           <a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">help_outline</i><span class="visuallyhidden">Help</span></a>
         </nav>
       </div>
       <main class="mdl-layout__content mdl-color--grey-100">
-        <div class="mdl-grid sz22_content">
-          <div class="sz22_charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
-                    <div id="szGaugeTherm" style="padding-right:20px;"></div><div id="szGaugePress" style="padding-left:20px;"></div>
+        <div class="mdl-grid sz22-content">
+          <div class="sz22-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
+				<div id="szGaugeTherm" style="padding-right:20px;"></div><div id="szGaugePress" style="padding-left:20px;"></div>
           </div>
-          <div class="sz22_graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--8-col"><div id="szLineChart"></div></div>
-          <div class="sz22_cards mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet mdl-grid mdl-grid--no-spacing">
-            <div class="sz22_updates mdl-card mdl-shadow--2dp mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--12-col-desktop">
+          <div class="sz22-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--8-col"><div id="szLineChart"></div></div>
+          <div class="sz22-cards mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet mdl-grid mdl-grid--no-spacing">
+            <div class="sz22-updates mdl-card mdl-shadow--2dp mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--12-col-desktop">
               <div class="mdl-card__title mdl-card--expand mdl-color--teal-300">
                 <h2 class="mdl-card__title-text">Location</h2>
               </div>
@@ -85,8 +83,8 @@ var jsonPData = $.ajax({url: JSONPfeedURL, data: {page: szpagenum}, dataType: 'j
                 <a href="#" class="mdl-button mdl-js-button mdl-js-ripple-effect">Page #<span id="szNumOfPage">1</span> updated: <span id="szLastUpdate">1</span></a>
               </div>
             </div>
-            <div class="sz22_separator mdl-cell--1-col"></div>
-            <div class="sz22_options mdl-card mdl-color--deep-purple-500 mdl-shadow--2dp mdl-cell mdl-cell--4-col mdl-cell--3-col-tablet mdl-cell--12-col-desktop">
+            <div class="sz22-separator mdl-cell--1-col"></div>
+            <div class="sz22-options mdl-card mdl-color--deep-purple-500 mdl-shadow--2dp mdl-cell mdl-cell--4-col mdl-cell--3-col-tablet mdl-cell--12-col-desktop">
               <div class="mdl-card__supporting-text mdl-color-text--blue-grey-50">
                 <h3>Equipment</h3>
                 <ul>
@@ -126,5 +124,6 @@ var jsonPData = $.ajax({url: JSONPfeedURL, data: {page: szpagenum}, dataType: 'j
         </div>
       </main>
     </div>
-<script src="js/material.min.js"></script>     <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1.1','packages':['line','gauge']}]}"></script>
-</body></html>
+    <script src="js/material.min.js"></script>	<script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1.1','packages':['line','gauge']}]}"></script>
+  </body>
+</html>
