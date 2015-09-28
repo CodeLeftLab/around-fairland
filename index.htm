@@ -2,18 +2,21 @@
     <meta name="description" content="Displays temperature and presssure readings from a solar-powered monitor in Fairland Park, Harringay">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Fairland Park, Harringay</title>
-    <meta name="mobile-web-app-capable" content="yes"><link rel="icon" sizes="192x192" href="images/touch/chrome-touch-icon-192x192.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Fairland Park, Harringay">
-    <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-precomposed.png">
-    <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
-    <meta name="msapplication-TileColor" content="#3372DF">
+	<link rel="apple-touch-icon" sizes="57x57" href="images/favicons/apple-touch-icon-57x57.png"><link rel="apple-touch-icon" sizes="60x60" href="images/favicons/apple-touch-icon-60x60.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="images/favicons/apple-touch-icon-72x72.png"><link rel="apple-touch-icon" sizes="76x76" href="images/favicons/apple-touch-icon-76x76.png">	
+	<link rel="apple-touch-icon" sizes="114x114" href="images/favicons/apple-touch-icon-114x114.png"><link rel="apple-touch-icon" sizes="120x120" href="images/favicons/apple-touch-icon-120x120.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="images/favicons/apple-touch-icon-144x144.png"><link rel="apple-touch-icon" sizes="152x152" href="images/favicons/apple-touch-icon-152x152.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon-180x180.png"><link rel="icon" type="image/png" href="images/favicons/favicon-32x32.png" sizes="32x32">
+	<link rel="icon" type="image/png" href="images/favicons/android-chrome-192x192.png" sizes="192x192"><link rel="icon" type="image/png" href="images/favicons/favicon-96x96.png" sizes="96x96">
+	<link rel="icon" type="image/png" href="images/favicons/favicon-16x16.png" sizes="16x16"><link rel="manifest" href="images/favicons/manifest.json">
+	<link rel="shortcut icon" href="images/favicons/favicon.ico"><meta name="msapplication-TileColor" content="#da532c">	<meta name="theme-color" content="#13a13b">
+	<meta name="msapplication-TileImage" content="images/favicons/mstile-144x144.png"><meta name="msapplication-config" content="images/favicons/browserconfig.xml">
     <link href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="css/material.min.css"><link rel="stylesheet" href="css/styles.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js">
-</script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script>$(document).ready(function() {var offset = new Date().getTimezoneOffset();// http://stackoverflow.com/questions/1091372/getting-the-clients-timezone-in-javascript
 setInterval(function()	{szpagenum = 1;	document.getElementById("szNumOfPage").innerHTML = szpagenum; szMain();  },15*60*60); // refresh every 1 minute
 google.setOnLoadCallback(szMain); } ); 
@@ -21,14 +24,14 @@ google.setOnLoadCallback(szMain); } );
 function szMain() {var szpagenum = 1;  var JSONPfeedURL='https://data.sparkfun.com/output/KJ36Y39YrVSZ0Rqxvdqv.json'; // http://phant.io/docs/output/http/
 var obj={}; obj[0]=['datetime','timestamp'];obj[1]=['number','temp'];obj[2]=['number','pressure'];
 var jsonPData = $.ajax({url: JSONPfeedURL, data: {page: szpagenum}, dataType: 'jsonp', }) // read the data from an external source
-.done(function (results) {var elct=0;var therm1 = 0.0;  var press2 = 0.0; // draw a chart
+.done(function (results) {var elct=0;var eladded=0;var therm1 = 0.0;  var press2 = 0.0; // draw a chart
 	var szChartOut = new google.visualization.DataTable(); szChartOut.addColumn(obj[0][0], obj[0][1]); szChartOut.addColumn(obj[1][0], obj[1][1]); szChartOut.addColumn(obj[2][0], obj[2][1]);
-	$.each(results, function (i, row) {elct++;therm1 = parseFloat(row.temp)-0.0 .toFixed(1); press2 = parseFloat(row.pressure)-1000 .toFixed(1);
-		var szdate = new Date(row.timestamp); var szTooOld=new Date('2015-07-23 17:08:53');	if (szdate>szTooOld) {} // if (press2 < 1000) {return false;}
-			szChartOut.addRow([ szdate,  therm1,  press2 ]); });
+	$.each(results, function (i, row) {elct++;therm1 = parseFloat(row.temp)-0.0 .toFixed(1); press2 = parseFloat(row.pressure).toFixed(1);
+		var szuse=true; var szdate = new Date(row.timestamp); var szTooOld=new Date('2015-07-23 17:08:53');	if (szdate>szTooOld) {} if (press2-1000<0) {szuse=false;}
+		if (szuse==true) {eladded++; szChartOut.addRow([ szdate,  therm1,  press2-1000 ]);} });
 	var szLineChartOpts = {height:563,backgroundColor: "rgb(235, 255, 235)" , legend: {position: 'bottom'}, //  vAxes: {0: {logScale: false},  1: {logScale: false, maxValue: 1.5}},
 	//legend:{position:'top'}, //  ,
-	title: 'Readings from Fairland Park', subtitle: 'updated every 15 minutes',
+	title: 'Readings from Fairland Park', subtitle: 'updated every 15 minutes', animation: {"startup": true},
 	series: {0:{axis: 'temp'}, 1:{axis: 'pressure'}, scaleType:'allfixed' }, 
 	axes:{
 	y:{ temp: {label: 'Temperature in Celsius'},  pressure: {label: 'milliBars of Pressure above 1000'}  }, 
